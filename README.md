@@ -2,6 +2,10 @@
 
 一个基于 [ChatTTS](https://github.com/2noise/ChatTTS) 与 [chatTTS-ui](https://github.com/jianchang512/chatTTS-ui) 改进的本地文本转语音工具，提供网页 UI 与 API，专注解决**长音频生成**、**专业术语/英文/数字/特殊符号读错**等问题。
 
+## 关于作者
+
+本项目由 [**卷卷姐juan**](https://space.bilibili.com/229150291) 维护，欢迎关注 B 站账号，获取更多 AI 音频与视频创作相关内容。
+
 ## 致谢与上游项目
 
 本项目在以下两个开源项目基础上进行改进：

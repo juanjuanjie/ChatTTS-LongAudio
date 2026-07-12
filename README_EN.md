@@ -2,6 +2,10 @@
 
 A local text-to-speech tool based on [ChatTTS](https://github.com/2noise/ChatTTS) and [chatTTS-ui](https://github.com/jianchang512/chatTTS-ui). It provides a web UI and API, focusing on solving **long-audio generation** and **mispronunciation of numbers, English words, jargon, and special symbols**.
 
+## About the Author
+
+Maintained by [**juanjuanjie (卷卷姐juan)**](https://space.bilibili.com/229150291). Follow me on Bilibili for more content about AI audio and video creation.
+
 ## Upstream Projects
 
 This project is built on top of:
