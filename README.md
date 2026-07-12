@@ -66,6 +66,10 @@ _run_app_py.bat         # 简化版启动脚本
 - Python 3.10–3.11
 - 显卡：有 4GB 以上显存的 NVIDIA 显卡可启用 CUDA 加速；否则使用 CPU
 
+## 界面预览
+
+![ChatTTS WebUI 预览](docs/ScreenShot_2026-07-12_195458_326.png)
+
 ## 安装与启动
 
 ### 1. 克隆仓库

@@ -60,6 +60,10 @@ _run_app.bat            # Windows one-click launch script (source mode, kills ol
 _run_app_py.bat         # Simplified launch script
 ```
 
+## Interface Preview
+
+![ChatTTS WebUI Preview](docs/ScreenShot_2026-07-12_195458_326.png)
+
 ## Requirements
 
 - Windows (source deployment)
