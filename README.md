@@ -72,11 +72,11 @@ _run_app_py.bat         # 简化版启动脚本
 
 ## 示例音频
 
-由本项目生成的长音频示例（多段自动切分合并）：
+由本项目生成的长音频示例（多段自动切分合并），可直接播放：
 
-<audio controls src="docs/merged-2026-07-12T11-52-02.wav"></audio>
+<video controls src="docs/sample-audio.mp4"></video>
 
-[点击下载示例音频](docs/merged-2026-07-12T11-52-02.wav)
+[点击下载原始 WAV 音频](docs/merged-2026-07-12T11-52-02.wav)
 
 ## 安装与启动
 
