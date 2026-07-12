@@ -70,6 +70,14 @@ _run_app_py.bat         # 简化版启动脚本
 
 ![ChatTTS WebUI 预览](docs/ScreenShot_2026-07-12_195458_326.png)
 
+## 示例音频
+
+由本项目生成的长音频示例（多段自动切分合并）：
+
+<audio controls src="docs/merged-2026-07-12T11-52-02.wav"></audio>
+
+[点击下载示例音频](docs/merged-2026-07-12T11-52-02.wav)
+
 ## 安装与启动
 
 ### 1. 克隆仓库
