@@ -41,7 +41,8 @@
 
 ### 4. 音色管理
 - `speaker/` 目录预置了多组音色 CSV/PT 文件（如 3798 等常用音色）。
-- 支持通过 `custom_voice` 参数在 WebUI 或 API 中指定音色。
+- 在 WebUI 或 API 中通过 `voice` 参数指定音色：可以是数字 seed（如 `2222`、`3798`），也可以是 `speaker/` 目录下的音色文件名（如 `3798.csv`）。
+- 通过环境变量 `DEFAULT_VOICE` 可修改 WebUI 打开时的默认音色。仓库默认 `2222`，本地可在 `.env` 中设置为 `3798`。
 
 ## 目录说明
 
@@ -69,14 +70,6 @@ _run_app_py.bat         # 简化版启动脚本
 ## 界面预览
 
 ![ChatTTS WebUI 预览](docs/ScreenShot_2026-07-12_195458_326.png)
-
-## 示例音频
-
-由本项目生成的长音频示例（多段自动切分合并），可直接播放：
-
-<video controls src="docs/sample-audio.mp4"></video>
-
-[点击下载原始 WAV 音频](docs/merged-2026-07-12T11-52-02.wav)
 
 ## 安装与启动
 
@@ -149,8 +142,7 @@ import requests
 res = requests.post('http://127.0.0.1:9966/tts', data={
     "text": "你好，这是 ChatTTS 长音频测试。",
     "prompt": "[break_3]",
-    "voice": "2222",
-    "custom_voice": "3798",
+    "voice": "3798",
     "temperature": 0.00001,
     "top_p": 0.6,
     "top_k": 20,
@@ -165,14 +157,14 @@ print(res.json())
 | --- | --- | --- |
 | `WEB_ADDRESS` | `localhost:9966` | 服务监听地址 |
 | `compile` | `false` | 是否启用 torch.compile |
+| `DEFAULT_VOICE` | `2222` | 默认音色，可以是数字 seed 或 `speaker/` 下的文件名 |
 
 API 参数：
 
 | 参数 | 默认值 | 说明 |
 | --- | --- | --- |
 | `text` | - | 待合成文本（必填） |
-| `voice` | `2222` | 预设音色 |
-| `custom_voice` | `0` | 自定义音色编号，优先级高于 `voice` |
+| `voice` | `2222` | 音色编号或 `speaker/` 下的音色文件名，例如 `3798`、`3798.csv` |
 | `temperature` | `0.3` | 采样温度 |
 | `top_p` | `0.7` | top_p |
 | `top_k` | `20` | top_k |

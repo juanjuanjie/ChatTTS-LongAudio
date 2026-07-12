@@ -181,6 +181,7 @@ input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(
                   <div class="col-6 col-md-4 col-lg-3"><div class="form-check"><input type="checkbox" class="form-check-input process-rule" id="process_rule_12" checked data-rule="12"><label class="form-check-label font12" for="process_rule_12">`VScode` 规范化</label></div></div>
                   <div class="col-6 col-md-4 col-lg-3"><div class="form-check"><input type="checkbox" class="form-check-input process-rule" id="process_rule_13" checked data-rule="13"><label class="form-check-label font12" for="process_rule_13">`Html` 规范化</label></div></div>
                   <div class="col-6 col-md-4 col-lg-3"><div class="form-check"><input type="checkbox" class="form-check-input process-rule" id="process_rule_14" checked data-rule="14"><label class="form-check-label font12" for="process_rule_14">`vibecoding` 规范化</label></div></div>
+                  <div class="col-6 col-md-4 col-lg-3"><div class="form-check"><input type="checkbox" class="form-check-input process-rule" id="process_rule_15" checked data-rule="15"><label class="form-check-label font12" for="process_rule_15">默认术语 &amp; 符号替换</label></div></div>
                 </div>
                 <hr style="border-color:var(--panel-border);margin:14px 0">
                 <div class="section-head mb-2">
@@ -324,6 +325,22 @@ $(function(){
     if(rules['12'])result=result.replace(/\bvscode\b/gi,'VS code');
     if(rules['13'])result=result.replace(/\bhtml\b/gi,'H T M L');
     if(rules['14'])result=result.replace(/\bvibecoding\b/gi,'Vibe Coding');
+
+    // Process Text 默认替换规则（与后端 uilib/utils.py 保持一致）
+    if(rules['15']){
+      const DEFAULT_REPLACE_RULES=[
+        {find:'ChatTTSLongAudio',replace:'Chat T T S Long Audio'},
+        {find:'LongAudio',replace:'Long Audio'},
+        {find:'ChatTTS',replace:'Chat T T S'},
+        {find:'chatTTSui',replace:'chat T T S U I'},
+        {find:'IndexTTS',replace:'Index T T S'},
+        {find:'WebUI',replace:'Web U I'},
+        {find:'2noise',replace:'二 noise'},
+        {find:'：',replace:'。'}
+      ];
+      DEFAULT_REPLACE_RULES.forEach(function(rule){result=result.split(rule.find).join(rule.replace);});
+    }
+
     result=result.replace(/\uFF0B/g,'\u52a0').replace(/[-\uFF0D]/g,'').replace(/"/g,'').replace(/\n{3,}/g,'\n\n').trim();
     return result;
   }
@@ -649,7 +666,20 @@ $(function(){
   $(document).on('input','.custom-rule-find,.custom-rule-replace',function(){saveCustomRules();syncProcessedText();});
 
   // 页面初始化（放在所有函数定义之后）
-  $('#voice').val('2222');$('#prompt').val('[break_3]');$('#skip_refine').prop('checked',false);$('#temperature').val('0.00001').next().text('0.00001');$('#top_p').val('0.6').next().text('0.6');try{const savedChunk=localStorage.getItem('workbench-chunk-size');if(savedChunk)$('#chunk_size').val(savedChunk);}catch(e){}updateDownloadButtons();loadProcessRules();loadCustomRules();syncProcessedText();
+  function initWorkbench(defaultVoice){
+    $('#voice').val(defaultVoice||'2222');
+    $('#prompt').val('[break_3]');
+    $('#skip_refine').prop('checked',false);
+    $('#temperature').val('0.00001').next().text('0.00001');
+    $('#top_p').val('0.6').next().text('0.6');
+    try{const savedChunk=localStorage.getItem('workbench-chunk-size');if(savedChunk)$('#chunk_size').val(savedChunk);}catch(e){}
+    updateDownloadButtons();loadProcessRules();loadCustomRules();syncProcessedText();
+  }
+
+  // 从 /config 读取默认音色，再初始化页面
+  $.ajax({url:'/config',type:'GET',cache:false})
+    .done(function(config){initWorkbench((config&&config.default_voice)||'2222');})
+    .fail(function(){initWorkbench('2222');});
   $('#text-input').on('input',function(){syncProcessedText();});
   $('#chunk_size').on('change',function(){try{localStorage.setItem('workbench-chunk-size',$(this).val());}catch(e){}syncProcessedText();});
   $(document).on('change','.process-rule',function(){saveProcessRules();syncProcessedText();});
@@ -676,7 +706,7 @@ $(function(){
     const text=processedText||originalText;
     if(!text){layer.alert('Please enter text',{title:false});return;}
     const voiceVal=$('#voice').val().trim()||'3798';
-    const baseData={prompt:$('#prompt').val(),voice:voiceVal,temperature:parseFloat($('#temperature').val()),top_p:parseFloat($('#top_p').val()),top_k:parseFloat($('#top_k').val()),refine_max_new_token:$('#refine_max_new_token').val(),infer_max_new_token:$('#infer_max_new_token').val(),skip_refine:$('#skip_refine').prop('checked')?1:0,is_split:$('#is_split').prop('checked')?1:0,custom_voice:0};
+    const baseData={prompt:$('#prompt').val(),voice:voiceVal,temperature:parseFloat($('#temperature').val()),top_p:parseFloat($('#top_p').val()),top_k:parseFloat($('#top_k').val()),refine_max_new_token:$('#refine_max_new_token').val(),infer_max_new_token:$('#infer_max_new_token').val(),skip_refine:$('#skip_refine').prop('checked')?1:0,is_split:$('#is_split').prop('checked')?1:0,apply_default_rules:$('#process_rule_15').prop('checked')?1:0,custom_voice:0};
     const maxChunkSize=parseInt($('#chunk_size').val())||140;
     const chunks=splitLongText(text,maxChunkSize);
     if(!chunks.length){layer.alert('Please enter text',{title:false});return;}

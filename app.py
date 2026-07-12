@@ -127,6 +127,17 @@ def index():
     )
 
 
+@app.route('/config', methods=['GET'])
+def get_config():
+    default_voice = os.getenv('DEFAULT_VOICE', '2222').strip() or '2222'
+    return jsonify({
+        "code": 0,
+        "default_voice": default_voice,
+        "web_address": WEB_ADDRESS,
+        "version": VERSION
+    })
+
+
 # 根据文本返回tts结果，返回 filename=文件名 url=可下载地址
 # 请求端根据需要自行选择使用哪个
 # params:
@@ -183,6 +194,7 @@ def tts():
     refine_max_new_token = utils.get_parameter(request, "refine_max_new_token", defaults["refine_max_new_token"], int)
     infer_max_new_token = utils.get_parameter(request, "infer_max_new_token", defaults["infer_max_new_token"], int)
     wav = utils.get_parameter(request, "wav", defaults["wav"], int)
+    apply_default_rules = utils.get_parameter(request, "apply_default_rules", 1, int)
         
         
     
@@ -224,7 +236,7 @@ def tts():
     
     # 中英按语言分行
     text_list=[t.strip() for t in text.split("\n") if t.strip()]
-    new_text=utils.split_text(text_list)
+    new_text=utils.split_text(text_list, use_default_rules=bool(apply_default_rules))
     if text_seed>0:
         torch.manual_seed(text_seed)
 

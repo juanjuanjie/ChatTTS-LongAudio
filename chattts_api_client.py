@@ -7,7 +7,7 @@
     _run_app_py.bat
 或  call venv\Scripts\activate.bat && python app.py
 
-默认使用 speaker/3798.csv 对应的音色（custom_voice=3798）。
+默认使用 speaker/3798.csv 对应的音色（voice=3798）。
 """
 import json
 import os
@@ -26,7 +26,7 @@ OUT_DIR = Path(__file__).resolve().parent / "output"
 # 默认参数对应 workbench 中卷卷姐音色 3798
 BASE_DATA = {
     "prompt": "[break_3]",
-    "voice": os.getenv("CHATTTS_VOICE", "2222"),
+    "voice": os.getenv("CHATTTS_VOICE", "3798"),
     "temperature": float(os.getenv("CHATTTS_TEMPERATURE", "0.00001")),
     "top_p": float(os.getenv("CHATTTS_TOP_P", "0.6")),
     "top_k": int(os.getenv("CHATTTS_TOP_K", "20")),
@@ -34,7 +34,6 @@ BASE_DATA = {
     "infer_max_new_token": 2048,
     "skip_refine": 0,
     "is_split": 1,
-    "custom_voice": int(os.getenv("CHATTTS_CUSTOM_VOICE", "3798")),
 }
 
 
@@ -79,7 +78,7 @@ def generate(text: str):
             audio_resp = requests.get(url, timeout=60)
             audio_resp.raise_for_status()
             ts = time.strftime("%H%M%S")
-            filename = f"{ts}_chunk{idx}_voice{BASE_DATA['custom_voice']}_textlen{len(chunk)}.wav"
+            filename = f"{ts}_chunk{idx}_voice{BASE_DATA['voice']}_textlen{len(chunk)}.wav"
             out_path = OUT_DIR / filename
             out_path.write_bytes(audio_resp.content)
             files.append(str(out_path))
@@ -118,7 +117,7 @@ if __name__ == "__main__":
         sys.exit(1)
     files = generate(text)
     if len(files) > 1:
-        merged = OUT_DIR / f"merged_{time.strftime('%Y-%m-%d-%H%M%S')}_voice{BASE_DATA['custom_voice']}.wav"
+        merged = OUT_DIR / f"merged_{time.strftime('%Y-%m-%d-%H%M%S')}_voice{BASE_DATA['voice']}.wav"
         merge_wavs(files, merged)
     else:
         print(f"[INFO] 生成的音频: {files[0] if files else '无'}")
