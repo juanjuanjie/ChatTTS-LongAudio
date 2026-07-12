@@ -194,7 +194,8 @@ def tts():
     refine_max_new_token = utils.get_parameter(request, "refine_max_new_token", defaults["refine_max_new_token"], int)
     infer_max_new_token = utils.get_parameter(request, "infer_max_new_token", defaults["infer_max_new_token"], int)
     wav = utils.get_parameter(request, "wav", defaults["wav"], int)
-    apply_default_rules = utils.get_parameter(request, "apply_default_rules", 1, int)
+    apply_term_rules = utils.get_parameter(request, "apply_term_rules", 1, int)
+    apply_punct_rules = utils.get_parameter(request, "apply_punct_rules", 1, int)
         
         
     
@@ -236,7 +237,7 @@ def tts():
     
     # 中英按语言分行
     text_list=[t.strip() for t in text.split("\n") if t.strip()]
-    new_text=utils.split_text(text_list, use_default_rules=bool(apply_default_rules))
+    new_text=utils.split_text(text_list, apply_term_rules=bool(apply_term_rules), apply_punct_rules=bool(apply_punct_rules))
     if text_seed>0:
         torch.manual_seed(text_seed)
 

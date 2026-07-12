@@ -10,8 +10,8 @@ from .zh_normalization import TextNormalizer
 from .cfg import SPEAKER_DIR
 from functools import partial
 
-# Process Text 默认替换规则：长词/复合词优先，避免短词先把复合词拆开
-DEFAULT_REPLACE_RULES = [
+# Process Text 默认术语替换规则：长词/复合词优先，避免短词先把复合词拆开
+TERM_REPLACE_RULES = [
     ("ChatTTSLongAudio", "Chat T T S Long Audio"),
     ("LongAudio", "Long Audio"),
     ("ChatTTS", "Chat T T S"),
@@ -19,15 +19,23 @@ DEFAULT_REPLACE_RULES = [
     ("IndexTTS", "Index T T S"),
     ("WebUI", "Web U I"),
     ("2noise", "二 noise"),
+]
+
+# Process Text 默认标点替换规则
+PUNCT_REPLACE_RULES = [
     ("：", "。"),
 ]
 
-def apply_default_rules(text):
+def apply_default_rules(text, apply_term=True, apply_punct=True):
     """应用 Process Text 默认替换规则"""
     if not text:
         return text
-    for find, replace in DEFAULT_REPLACE_RULES:
-        text = text.replace(find, replace)
+    if apply_term:
+        for find, replace in TERM_REPLACE_RULES:
+            text = text.replace(find, replace)
+    if apply_punct:
+        for find, replace in PUNCT_REPLACE_RULES:
+            text = text.replace(find, replace)
     return text
 
 def openweb(url):
@@ -159,15 +167,14 @@ def num2text(text):
 
 
 # 中英文数字转换为文字，特殊符号处理
-def split_text(text_list, use_default_rules=True):
+def split_text(text_list, apply_term_rules=True, apply_punct_rules=True):
     
     tx = TextNormalizer()
     haserror=False
     result=[]
     for i,text in enumerate(text_list):
         # 先应用默认替换规则（Process Text）
-        if use_default_rules:
-            text = apply_default_rules(text)
+        text = apply_default_rules(text, apply_term=apply_term_rules, apply_punct=apply_punct_rules)
 
         if get_lang(text)=='zh':
             tmp="".join(tx.normalize(text))

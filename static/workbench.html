@@ -181,7 +181,8 @@ input[type=range]::-moz-range-track{height:6px;border-radius:3px;background:var(
                   <div class="col-6 col-md-4 col-lg-3"><div class="form-check"><input type="checkbox" class="form-check-input process-rule" id="process_rule_12" checked data-rule="12"><label class="form-check-label font12" for="process_rule_12">`VScode` 规范化</label></div></div>
                   <div class="col-6 col-md-4 col-lg-3"><div class="form-check"><input type="checkbox" class="form-check-input process-rule" id="process_rule_13" checked data-rule="13"><label class="form-check-label font12" for="process_rule_13">`Html` 规范化</label></div></div>
                   <div class="col-6 col-md-4 col-lg-3"><div class="form-check"><input type="checkbox" class="form-check-input process-rule" id="process_rule_14" checked data-rule="14"><label class="form-check-label font12" for="process_rule_14">`vibecoding` 规范化</label></div></div>
-                  <div class="col-6 col-md-4 col-lg-3"><div class="form-check"><input type="checkbox" class="form-check-input process-rule" id="process_rule_15" checked data-rule="15"><label class="form-check-label font12" for="process_rule_15">默认术语 &amp; 符号替换</label></div></div>
+                  <div class="col-6 col-md-4 col-lg-3"><div class="form-check"><input type="checkbox" class="form-check-input process-rule" id="process_rule_15" checked data-rule="15"><label class="form-check-label font12" for="process_rule_15">默认术语替换</label></div></div>
+                  <div class="col-6 col-md-4 col-lg-3"><div class="form-check"><input type="checkbox" class="form-check-input process-rule" id="process_rule_16" checked data-rule="16"><label class="form-check-label font12" for="process_rule_16">`：` → `。`</label></div></div>
                 </div>
                 <hr style="border-color:var(--panel-border);margin:14px 0">
                 <div class="section-head mb-2">
@@ -328,17 +329,19 @@ $(function(){
 
     // Process Text 默认替换规则（与后端 uilib/utils.py 保持一致）
     if(rules['15']){
-      const DEFAULT_REPLACE_RULES=[
+      const TERM_REPLACE_RULES=[
         {find:'ChatTTSLongAudio',replace:'Chat T T S Long Audio'},
         {find:'LongAudio',replace:'Long Audio'},
         {find:'ChatTTS',replace:'Chat T T S'},
         {find:'chatTTSui',replace:'chat T T S U I'},
         {find:'IndexTTS',replace:'Index T T S'},
         {find:'WebUI',replace:'Web U I'},
-        {find:'2noise',replace:'二 noise'},
-        {find:'：',replace:'。'}
+        {find:'2noise',replace:'二 noise'}
       ];
-      DEFAULT_REPLACE_RULES.forEach(function(rule){result=result.split(rule.find).join(rule.replace);});
+      TERM_REPLACE_RULES.forEach(function(rule){result=result.split(rule.find).join(rule.replace);});
+    }
+    if(rules['16']){
+      result=result.split('：').join('。');
     }
 
     result=result.replace(/\uFF0B/g,'\u52a0').replace(/[-\uFF0D]/g,'').replace(/"/g,'').replace(/\n{3,}/g,'\n\n').trim();
@@ -706,7 +709,7 @@ $(function(){
     const text=processedText||originalText;
     if(!text){layer.alert('Please enter text',{title:false});return;}
     const voiceVal=$('#voice').val().trim()||'3798';
-    const baseData={prompt:$('#prompt').val(),voice:voiceVal,temperature:parseFloat($('#temperature').val()),top_p:parseFloat($('#top_p').val()),top_k:parseFloat($('#top_k').val()),refine_max_new_token:$('#refine_max_new_token').val(),infer_max_new_token:$('#infer_max_new_token').val(),skip_refine:$('#skip_refine').prop('checked')?1:0,is_split:$('#is_split').prop('checked')?1:0,apply_default_rules:$('#process_rule_15').prop('checked')?1:0,custom_voice:0};
+    const baseData={prompt:$('#prompt').val(),voice:voiceVal,temperature:parseFloat($('#temperature').val()),top_p:parseFloat($('#top_p').val()),top_k:parseFloat($('#top_k').val()),refine_max_new_token:$('#refine_max_new_token').val(),infer_max_new_token:$('#infer_max_new_token').val(),skip_refine:$('#skip_refine').prop('checked')?1:0,is_split:$('#is_split').prop('checked')?1:0,apply_term_rules:$('#process_rule_15').prop('checked')?1:0,apply_punct_rules:$('#process_rule_16').prop('checked')?1:0,custom_voice:0};
     const maxChunkSize=parseInt($('#chunk_size').val())||140;
     const chunks=splitLongText(text,maxChunkSize);
     if(!chunks.length){layer.alert('Please enter text',{title:false});return;}
