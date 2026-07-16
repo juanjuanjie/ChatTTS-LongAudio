@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# Environment variables & secrets
+.env
+*.env
+sha256.env
+
+# IDE
+.vscode/
+.idea/
+.agents/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ChatTTS models (auto-downloaded on first run, 1GB+)
+models/
+
+# Generated outputs
+output/
+static/wavs/
+
+# Removed unrelated dashboard assets (kept in git history only if previously committed)
+static/data/
+static/fans/
+static/fear-greed-chart-fix.js
+static/notion-logo.png
+static/js/echarts.min.js
+static/js/lightweight-charts.standalone.production.js
+static/js/mermaid.min.js
+
+# Logs
+logs/
+*.log
+
+# Compiled / packaged binaries
+app.exe
+*.exe
+*.msi
+*.dmg
+*.app
+
+# Test artifacts
+1111.wav
+output_audio_*.wav
