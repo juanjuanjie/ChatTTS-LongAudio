@@ -1,0 +1,17 @@
+Flask
+huggingface_hub
+ipython
+pandas
+modelscope
+numpy==1.26.4
+einops
+tqdm
+omegaconf
+python-dotenv
+requests
+soundfile
+tokenizers==0.19.1
+transformers==4.41.2
+vector-quantize-pytorch==1.14.24
+vocos
+waitress
